@@ -1,0 +1,10 @@
+[package]
+name = "chemformula"
+version = "0.1.0"
+entrypoint = "export.typ"
+authors = ["pacaunt <@pacaunt>"]
+license = "MIT"
+compiler = "0.13.1"
+repository = "https://github.com/pacaunt/typst-presentate"
+description = "A package to create slides with ease."
+categories = ["presentation"]
