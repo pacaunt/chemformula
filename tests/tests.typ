@@ -134,7 +134,7 @@ $ #ch(`CH$e$m^F_O;R$mu$uLa$""_"0.1.0"$`) $
 
 #ch(`^2003_34 E^2*- aq`)
 
-#ch(`Cu^^+II  + H__2 H^^2  $stretch(harpoons.rtlb, size: #150%)^"Federic"_"Lorenz"$`)
+#ch(`Cu^^+II + H__2 H^^2  $stretch(harpoons.rtlb, size: #150%)^"Federic"_"Lorenz"$`)
 
 #ch("H2SO4O5S6")
 
@@ -202,3 +202,22 @@ $ [limits(#skeletize({
 #"(CH(AjJ)fkl) (AH)".matches(regex("\([^)(]*(?:\([^)(]*(?:\([^)(]*(?:\([^)(]*\)[^)(]*)*\)[^)(]*)*\)[^)(]*)*\)"))
 
 #ch("G^((AF)3F)")
+
+#parsing-reaction("^99_33    Th+")
+
+#ch("^99_33 Th")
+
+
+
+$ {a/b}_2 lr("{" d/3 #sym.paren.r) $
+
+#type(sym.paren.l)
+
+#type(")")
+
+#parsing-reaction("(2*-)")
+
+
+
+#parsing-reaction("((a2))3)4)5")
+
