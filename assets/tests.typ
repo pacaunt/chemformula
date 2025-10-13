@@ -15,6 +15,9 @@
   "*_this",
 ).map(p => p + "@")
 
+#parsing-chem("Na+^3_3@"))
+#position-chem("(Na2-)@")
+
 // #for base in bases {
 //   for exponent in exponents {
 //     for position in positions {
@@ -32,7 +35,7 @@
 #parsing-reaction("K3[Fe(CN)6](aq) + H2O(l) ->[D2O][CN] ^99_12 ACN  Fe^II <=> de alpha $alpha$")
 #parsing-chem("K3[Fe(CN)6]")
 
-#eval-chem(parsing-chem("e^-@"))
+// #eval-chem(parsing-chem("e^-@"))
 
 #parsing-reaction("CuSO4.5H2O")
 
@@ -159,3 +162,31 @@ $ #ch(`CH$e$m^F_O;R$mu$uLa$""_"0.1.0"$`) $
 
 
 #ch("H2O + $limits(upright(C))^(\"+II\")$ + CH3^*")
+
+
+
+#ch("K3[Fe(CN)6]  + 6H2O(aq) SO_4^2-")
+
+#parsing-reaction("2 H2O A_$d$ SO_3^2-")
+#position-chem("SO_4^2-")
+
+#parsing-reaction("CuSO4.5H2O ->^Delta H^((alpha de)) e-")
+
+#ch("2 NH3 + 3 H2O(l) ->[] A_$d$ SO_4^2- e- ->[Adf] H^((alpha))")
+
+#ch("_0^1;n+ + ^4_2;He")
+
+#ch(`
+  Zn^2+;(aq) <=>[+ 2 OH-][+ 2 H+] $underbrace(#ch("Zn(OH)2 v"), "Solids")$ <=>[+ 2 OH-][+ 2 H+] $underbrace(#ch("[Zn(OH)4]^2-"), "Solution")$
+`)
+
+$ K = ch("[CH3COO-][H+]")/ch("CH3COOH") $
+
+#parsing-reaction("K2Cr^^(+V);2O6 ^ Cr(OH)3(aq)")
+#position-chem("Cr(OH)3(aq)")
+
+#parsing-reaction("A -> B")
+#parse-arrow("->")
+$ ch("K2Cr^^(+VI)_2;O7(aq) + 2 C^^0;H2O(aq) -> CO2(g) ^  + 2 Cr^^+III;(OH)3(aq)") $
+
+#ch("K3[Fe(CN)6] SiO4;^2-")

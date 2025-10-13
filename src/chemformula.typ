@@ -1,122 +1,6 @@
 #import "parser.typ": *
 
-#let eval-chem(tokens, scope: (:)) = {
-  let positions = ()
-  let stripped = regex("\;|\@|\ ")
-
-  let peek = peek.with(arr: tokens)
-  let eval-methods = (
-    "None": v => {
-      v.expr = v.expr.replace(regex("\@|\;"), "").replace(regex("\.|\*"), sym.dot)
-      if peek(v.i - 1).type == "Digits" and peek(v.i + 1).type == "Nucleus" {
-        v.expr = v.expr.replace(" ", sym.space.thin, count: 1)
-        (position: "inline", value: v.expr)
-      } else {
-        (position: "inline", value: v.expr)
-      }
-    },
-    "Digits": v => {
-      if peek(v.i - 1).type == "None" {
-        if peek(v.i + 1).type == "None" {
-          if peek(v.i + 2).type != "None" {
-            (position: "inline", value: v.expr)
-          } else {
-            (position: "inline", value: v.expr)
-          }
-        } else {
-          (position: "inline", value: v.expr)
-        }
-      } else {
-        if peek(v.i - 1).type == "Nucleus" {
-          (position: "br", value: v.expr)
-        } else {
-          (position: "inline", value: v.expr)
-        }
-      }
-    },
-    "Charges": v => {
-      v.expr = v.expr.replace("-", sym.minus).replace(regex("\*|\."), sym.bullet)
-      if peek(v.i - 1).type == "None" {
-        (position: "inline", value: v.expr)
-      } else {
-        (position: "tr", value: v.expr)
-      }
-    },
-    "Superscript": v => {
-      v.expr = v.expr.trim("^").trim(stripped).replace("-", sym.minus).replace(regex("\*|\."), sym.bullet)
-      (position: "tr", value: v.expr)
-    },
-    "Subscript": v => {
-      v.expr = v.expr.trim("_").trim(stripped).replace("-", sym.minus).replace(regex("\*|\."), sym.bullet)
-      (position: "br", value: v.expr)
-    },
-    "Above": v => {
-      v.expr = v.expr.trim("^").trim(stripped).replace("-", sym.minus).replace(regex("\*|\."), sym.bullet)
-      (position: "t", value: v.expr)
-    },
-    "Below": v => {
-      v.expr = v.expr.trim("_").trim(stripped).replace("-", sym.minus).replace(regex("\*|\."), sym.bullet)
-      (position: "b", value: v.expr)
-    },
-    "Nucleus": v => {
-      let braces = (
-        "(": ")",
-        "{": "}",
-        "[": "]",
-      )
-      for (l, r) in braces.pairs() {
-        if type(v.expr) == str and v.expr.starts-with(l) and v.expr.ends-with(r) {
-          v.expr = (l, r).join(
-            eval-chem(parsing-chem(v.expr.trim(regex((l, r).map(p => "\\" + p).join("|"))))),
-          )
-        }
-      }
-      (position: "inline", value: v.expr)
-    },
-  )
-
-  let values = (i: 0, type: "None", expr: "")
-  for (i, toks) in tokens.enumerate() {
-    values.i = i
-    values = values + toks
-    positions.push((eval-methods.at(values.type))(values))
-  }
-
-  // [#positions]
-
-  let results = ()
-  let temp = (inline: "")
-
-  let reset-positions(temp, results) = {
-    let base = temp.remove("inline", default: "")
-    if temp.len() == 0 {
-      results.push(base)
-    } else {
-      results.push(math.attach(math.limits(base), ..temp))
-      temp = (:)
-    }
-    return (temp, results)
-  }
-
-  for (position, value) in positions {
-    if temp.at(position, default: none) != none {
-      (temp, results) = reset-positions(temp, results)
-      temp.insert(position, value)
-    } else {
-      temp.insert(position, value)
-    }
-  }
-  if temp.len() != 0 {
-    (_, results) = reset-positions(temp, results)
-  }
-
-  results.sum()
-}
-
-
-
-
-#let ch(chem, scope: (:)) = {
+#let ch(chem, scope: (:), mode: "Inline") = {
   let ch = ch.with(scope: scope) // for recursive evaluation
 
   if type(chem) == content {
@@ -127,17 +11,80 @@
     }
   }
   let EOT = "@"
-  let tokens = parsing-reaction(chem + EOT)
+  let tokens = parsing-reaction(chem + EOT, mode: mode)
+
   let peek = peek.with(arr: tokens)
+  let positions = (:)
+  let scripts = ("Superscript", "Subscript", "Above", "Below")
 
-
-  let results = ()
+  let results = ("",)
+  let _type = std.type
   for (i, toks) in tokens.enumerate() {
     let (type, expr) = toks
-    let out = if type == "Elem" {
-      $#eval-chem(parsing-chem(expr + EOT), scope: scope)$
+    let out = if type in ("Digits", "None") {
+      if mode == "Scripts" {
+        expr = expr.replace(regex("\.|\*"), sym.bullet)
+      }
+      expr.trim(regex("\@|\;")).replace("-", sym.minus).replace(regex("\.|\*"), sym.dot)
+    } else if type == "Elem" {
+      let braces = (
+        "(": ")",
+        "{": "}",
+        "[": "]",
+      )
+      for (l, r) in braces.pairs() {
+        if _type(expr) == str and expr.starts-with(l) and expr.ends-with(r) {
+          expr = (l, r).join(
+            ch(expr.trim(regex((l, r).map(p => "\\" + p).join("|")))),
+          )
+        }
+      }
+      expr
+      //$#eval-chem(parsing-chem(expr + EOT), scope: scope)$
+    } else if type in scripts {
+      let ch = ch.with(mode: "Scripts")
+
+
+      // check if nothing is here.
+      if positions.len() == 0 {
+        positions.inline = results.pop()
+      }
+
+      // put the current type
+      positions.insert(type, expr)
+
+      let next = peek(i + 1)
+      if next.type in scripts {
+        if not next.type in positions {
+          //positions.insert(type, expr)
+          continue
+        }
+      }
+
+      let formats = (
+        "Superscript": (pos: "tr", rem: regex("[\^\;\s\@]")),
+        "Subscript": (pos: "br", rem: regex("[\_\;\s\@]")),
+        "Above": (pos: "t", rem: regex("[\^\;\s\@]")),
+        "Below": (pos: "b", rem: regex("[\_\;\s\@]")),
+      )
+
+      let base = positions.remove("inline")
+      let args = (:)
+
+      for (mode, expr) in positions.pairs() {
+        let (pos, rem) = formats.at(mode)
+        expr = expr.trim(rem)
+        args.insert(pos, ch(expr.trim(regex("[\(\)]"), repeat: false)))
+      }
+
+      math.attach(math.limits(base), ..args)
+      positions = (:)
     } else if type == "Space" {
-      " "
+      if peek(i - 1).type == "Digits" and peek(i + 1).type == "Elem" {
+        expr.replace(" ", sym.space.thin, count: 1)
+      } else {
+        " "
+      }
     } else if type == "Symbol" {
       expr.replace(regex("\@|\;"), "").replace(regex("\*|\."), sym.dot)
     } else if type == "Arrow" {
@@ -152,11 +99,15 @@
       args = args.map(ch)
       let above = args.at(0, default: none)
       let below = args.at(1, default: none)
-      $stretch(#arrow, size: #150%)^above_below$
+      let size = 100% + 1em
+      if args.len() == 0 {
+        size = 2em
+      }
+      $stretch(#arrow, size: size)^above_below$
     } else if type == "Gaseous" {
-      expr.replace("^", sym.arrow.t).replace(regex("\@|\;"), "").trim(" ")
+      expr.replace("^", sym.arrow.t).replace(regex("\@|\;"), "").trim(" ", repeat: false)
     } else if type == "Precipitation" {
-      expr.replace("v", sym.arrow.b).replace(regex("\@|\;"), "").trim(" ")
+      expr.replace("v", sym.arrow.b).replace(regex("\@|\;"), "").trim(" ", repeat: false)
     } else if type == "Text" {
       eval(mode: "markup", expr.trim("\""), scope: scope)
     } else if type == "Math" {
@@ -164,6 +115,6 @@
     }
     results.push(out)
   }
-  results.sum()
+  $results.sum()$
 }
 
