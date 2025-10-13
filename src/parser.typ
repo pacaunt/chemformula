@@ -48,17 +48,17 @@
   }
 }
 
-#let parsing-reaction(chem) = {
+
+
+#let parsing-chem(chem) = {
   let rules = (
-    ("Arrow", regex("(<=>|<->|<-|->|<=|=>)(\[[^\]]*\]){0,2}"), 3),
-    ("Math", regex("\$[^\$]*\$"), 3),
-    ("Text", regex("\"[^\"]*\""), 3),
-    ("Precipitation", regex("\s+v[\s\@\;]+"), 2),
-    ("Gaseous", regex("\s+\^[\s\@\;]+"), 2),
-    //("Elem", regex("[\^\_]*(\[[^\]]*\]|\([^\)]*\)|\{[^\}]*\})[\d\+\-\^\_]*"), 2),
-    ("Symbol", regex("\ [^A-Za-z\d\_\^]+[\s\@\;]"), 1),
-    ("Space", regex("\s+"), 2),
-    ("Elem", regex("\S+"), 1),
+    ("Above", regex("\^\^[^\s\;\@\_]+|\^\^[^\s\;\@]*[\s\;\@]"), 2),
+    ("Below", regex("\_\_[^\s\;\@]+|\_\_[^\;\s\@]*[\s\;\@]|\_\_\([^\)]\)"), 2),
+    ("Superscript", regex("\^[^\s\;\@\_]+|\^[^\s\;\@]*[\s\;\@]|\^\([^\)]\)"), 2),
+    ("Subscript", regex("\_[^\s\;\@\^]+|\_[^\;\s\@]*[\s\;\@]|\_\([^\)]\)"), 2),
+    ("Nucleus", regex("[A-Za-z]+|\[[^\]]*\]+|\([^\)]*\)+|\{[^\}]*\}"), 1),
+    ("Digits", regex("\d+"), 1),
+    ("Charges", regex("[\-\+]+"), 1),
     ("None", regex(".*"), 0),
   )
 
@@ -79,20 +79,91 @@
   _parse((txt,), rules: rules)
 }
 
-#let parsing-chem(chem) = {
+#let position-chem(chem, mode: "Inline") = {
+  let tokens = parsing-chem(chem)
+  let results = ()
+  let peek = peek.with(arr: tokens)
+
+  for (i, toks) in tokens.enumerate() {
+    let (type, expr) = toks
+    let out = if type == "Digits" {
+      if peek(i - 1).type == "None" {
+        if peek(i + 1).type == "None" {
+          if peek(i + 2).type != "None" {
+            (type: "Digits", expr: expr)
+          } else {
+            (type: "Digits", expr: expr)
+          }
+        } else {
+          (type: "Digits", expr: expr)
+        }
+      } else {
+        if peek(i - 1).type == "Nucleus" {
+          (type: "Subscript", expr: expr)
+        } else {
+          (type: "Digits", expr: expr)
+        }
+      }
+    } else if type == "Charges" {
+      expr = expr.replace("-", sym.minus).replace(regex("\*|\."), sym.bullet)
+      if peek(i - 1).type == "None" or mode == "Scripts" {
+        (type: "Elem", expr: expr)
+      } else {
+        (type: "Superscript", expr: expr)
+      }
+    } else if type == "Nucleus" {
+      (type: "Elem", expr: expr)
+    } else {
+      toks
+    }
+    results.push(out)
+  }
+  results
+}
+
+#let parsing-reaction(chem, mode: "Inline") = {
   let rules = (
-    ("Above", regex("\^\^[^\s\;\@\_]+|\^\^[^\s\;\@]*[\s\;\@]|\^\^\([^\)]\)"), 2),
-    ("Below", regex("\_\_[^\s\;\@]+|\_\_[^\;\s\@]*[\s\;\@]|\_\_\([^\)]\)"), 2),
-    ("Superscript", regex("\^[^\s\;\@\_]+|\^[^\s\;\@]*[\s\;\@]|\^\([^\)]\)"), 2),
-    ("Subscript", regex("\_[^\s\;\@\^]+|\_[^\;\s\@]*[\s\;\@]|\_\([^\)]\)"), 2),
-    ("Nucleus", regex("[A-Za-z]+|[\(\[\{}].*[\)\}\]]"), 1),
-    ("Digits", regex("\d+"), 1),
-    ("Charges", regex("[\-\+]+"), 1),
+    ("Arrow", regex("(<=>|<->|<-|->|<=|=>)(\[[^\]]*\]){0,2}"), 3),
+    ("Math", regex("\$[^\$]*\$"), 3),
+    ("Text", regex("\"[^\"]*\""), 3),
+    ("Precipitation", regex("\s+v[\s\@\;]+"), 2),
+    ("Gaseous", regex("\s\^[\s\@\;]+"), 3),
+    ("Above", regex("\^\^\([^\)]*\)+|\^\^[^\s\;\@\_]+|\^\^[^\s\;\@]*[\s\;\@]"), 3),
+    ("Below", regex("\_\_\([^\)]*\)+|\_\_[^\s\;\@]+|\_\_[^\;\s\@]*[\s\;\@]"), 3),
+    ("Superscript", regex("\^\([^\)]*\)+|\^[^\s\;\@\_]+|\^[^\s\;\@]*[\s\;\@]"), 3),
+    ("Subscript", regex("\_\([^\)]*\)+|\_[^\s\;\@\^]+|\_[^\;\s\@]*[\s\;\@]"), 3),
+    ("Symbol", regex("\ [^A-Za-z\d\_\^]+[\s\@\;]"), 1),
+    ("Space", regex("\s+"), 2),
+    ("Elem", regex("\S+"), 1),
     ("None", regex(".*"), 0),
   )
 
   _parse((chem,), rules: rules)
+    .map(it => {
+      if it.type == "Elem" {
+        position-chem(it.expr, mode: mode)
+      } else {
+        it
+      }
+    })
+    .flatten()
 }
+
+
+// #let parsing-chem(chem) = {
+//   let rules = (
+//     ("Above", regex("\^\^[^\s\;\@\_]+|\^\^[^\s\;\@]*[\s\;\@]|\^\^\([^\)]\)"), 2),
+//     ("Below", regex("\_\_[^\s\;\@]+|\_\_[^\;\s\@]*[\s\;\@]|\_\_\([^\)]\)"), 2),
+//     ("Superscript", regex("\^[^\s\;\@\_]+|\^[^\s\;\@]*[\s\;\@]|\^\([^\)]\)"), 2),
+//     ("Subscript", regex("\_[^\s\;\@\^]+|\_[^\;\s\@]*[\s\;\@]|\_\([^\)]\)"), 2),
+//     ("Nucleus", regex("[A-Za-z]+|[\(\[\{}].*[\)\}\]]"), 1),
+//     ("Digits", regex("\d+"), 1),
+//     ("Charges", regex("[\-\+]+"), 1),
+//     ("None", regex(".*"), 0),
+//   )
+
+//   _parse((chem,), rules: rules)
+// }
 
 // #let _parse(arr, rules: (), rule: 0) = {
 //   let _type = std.type
