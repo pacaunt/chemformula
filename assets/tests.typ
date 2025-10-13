@@ -188,5 +188,12 @@ $ K = ch("[CH3COO-][H+]")/ch("CH3COOH") $
 #parsing-reaction("A -> B")
 #parse-arrow("->")
 $ ch("K2Cr^^(+VI)_2;O7(aq) + 2 C^^0;H2O(aq) -> CO2(g) ^  + 2 Cr^^+III;(OH)3(aq)") $
-
+#parsing-reaction("(({}))")
+#import "@preview/alchemist:0.1.8": skeletize, single, fragment
+#let ch = ch.with(scope: (ch: ch, skeletize: skeletize, single: single))
+$ [limits(#skeletize({
+  single(angle: -1)
+  single(angle: 1)
+  fragment("CH_3")
+}))]^(2+) $
 #ch("K3[Fe(CN)6] SiO4;^2-")
