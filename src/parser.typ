@@ -1,0 +1,136 @@
+#let _parse(arr, rules: ()) = {
+  if arr.all(it => type(it) != str) {
+    return arr
+  } else {
+    arr
+      .map(case => {
+        if type(case) == str {
+          let curr = case
+
+          let index = 0
+          let results = ()
+          while curr.len() > 0 {
+            let matches = rules.map(r => {
+              let (type, rule, strength) = r
+              if curr.match(rule) == none { return none } else {
+                (type: type, match: curr.match(rule), strength: strength)
+              }
+            })
+            let success = matches.filter(i => i != none).sorted(key: info => (-info.strength, info.match.start))
+
+            if success != () {
+              let (type, match) = success.at(0)
+              if index <= match.start {
+                if index < match.start {
+                  results.push(curr.slice(index, match.start))
+                }
+                results.push((type: type, expr: match.text))
+                index = match.end
+              }
+            }
+            curr = curr.slice(index, none)
+            index = 0
+          }
+          _parse(results, rules: rules).flatten()
+        } else {
+          case
+        }
+      })
+      .flatten()
+  }
+}
+
+#let peek(arr: (), i) = {
+  if i >= arr.len() or i < 0 {
+    return (type: "None", expr: "@")
+  } else {
+    arr.at(i)
+  }
+}
+
+#let parsing-reaction(chem) = {
+  let rules = (
+    ("Arrow", regex("(<=>|<->|<-|->|<=|=>)(\[[^\]]*\]){0,2}"), 3),
+    ("Math", regex("\$[^\$]*\$"), 3),
+    ("Text", regex("\"[^\"]*\""), 3),
+    ("Precipitation", regex("\s+v[\s\@\;]+"), 2),
+    ("Gaseous", regex("\s+\^[\s\@\;]+"), 2),
+    //("Elem", regex("[\^\_]*(\[[^\]]*\]|\([^\)]*\)|\{[^\}]*\})[\d\+\-\^\_]*"), 2),
+    ("Symbol", regex("\ [^A-Za-z\d\_\^]+[\s\@\;]"), 1),
+    ("Space", regex("\s+"), 2),
+    ("Elem", regex("\S+"), 1),
+    ("None", regex(".*"), 0),
+  )
+
+  _parse((chem,), rules: rules)
+}
+
+#let parse-arrow(txt) = {
+  let rules = (
+    ("<=>", regex("<=>")),
+    ("<->", regex("<->")),
+    ("<-", regex("<-")),
+    ("->", regex("->")),
+    ("<=", regex("<=")),
+    ("=>", regex("=>")),
+    ("Args", regex("\[[^\]]*\]")),
+  ).map(r => r + (1,))
+
+  _parse((txt,), rules: rules)
+}
+
+#let parsing-chem(chem) = {
+  let rules = (
+    ("Above", regex("\^\^[^\s\;\@\_]+|\^\^[^\s\;\@]*[\s\;\@]|\^\^\([^\)]\)"), 2),
+    ("Below", regex("\_\_[^\s\;\@]+|\_\_[^\;\s\@]*[\s\;\@]|\_\_\([^\)]\)"), 2),
+    ("Superscript", regex("\^[^\s\;\@\_]+|\^[^\s\;\@]*[\s\;\@]|\^\([^\)]\)"), 2),
+    ("Subscript", regex("\_[^\s\;\@\^]+|\_[^\;\s\@]*[\s\;\@]|\_\([^\)]\)"), 2),
+    ("Nucleus", regex("[A-Za-z]+|[\(\[\{}].*[\)\}\]]"), 1),
+    ("Digits", regex("\d+"), 1),
+    ("Charges", regex("[\-\+]+"), 1),
+    ("None", regex(".*"), 0),
+  )
+
+  _parse((chem,), rules: rules)
+}
+
+// #let _parse(arr, rules: (), rule: 0) = {
+//   let _type = std.type
+//   if rule == rules.len() {
+//     return arr
+//   }
+//   arr
+//     .map(case => {
+//       if _type(case) == str {
+//         let txt = case
+//         let n = txt.len()
+//         let pointer = 0
+//         let (type, pattern) = rules.at(rule)
+//         let matches = txt.matches(pattern)
+//         let parsed = ()
+
+//         if matches == () {
+//           parsed.push(txt)
+//         } else {
+//           for match in matches {
+//             let (start, end, text) = match
+//             let complete = (type: type, expr: text)
+//             if pointer < start {
+//               parsed.push(txt.slice(pointer, start))
+//               parsed.push(complete)
+//               pointer = end
+//             } else if pointer == start {
+//               parsed.push(complete)
+//               pointer = end
+//             }
+//           }
+//           if pointer < n { parsed.push(txt.slice(pointer, none)) }
+//         }
+//         let rule = rule + 1
+//         return _parse(parsed, rule: rule, rules: rules).flatten()
+//       } else {
+//         case
+//       }
+//     })
+//     .flatten()
+// }
