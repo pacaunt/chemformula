@@ -125,13 +125,13 @@
 
 #let parsing-reaction(chem, mode: "Inline") = {
   let rules = (
-    ("Arrow", regex("(<=>|<->|<-|->|<=|=>)(\[[^\]]*\]){0,2}"), 3),
+    ("Arrow", regex("(<=>|<->|<-|->)(\[[^\]]*\]){0,2}"), 3),
     ("Math", regex("\$[^\$]*\$"), 3),
     ("Text", regex("\"[^\"]*\""), 3),
     ("Precipitation", regex("\s+v[\s\@\;]+"), 2),
     ("Gaseous", regex("\s\^[\s\@\;]+"), 3),
     ("Above", regex("\^\^" + mpp + "|\^\^[^\s\;\@\_]+|\^\^[^\s\;\@]*[\s\;\@]"), 3),
-    ("Below", regex("\_\_" + mpp + "|\_\_[^\s\;\@]+|\_\_[^\;\s\@]*[\s\;\@]"), 3),
+    ("Below", regex("\_\_" + mpp + "|\_\_[^\s\;\@\^]+|\_\_[^\;\s\@]*[\s\;\@]"), 3),
     ("Superscript", regex("\^" + mpp + "|\^[^\s\;\@\_]+|\^[^\s\;\@]*[\s\;\@]"), 3),
     ("Subscript", regex("\_" + mpp + "|\_[^\s\;\@\^]+|\_[^\;\s\@]*[\s\;\@]"), 3),
     ("Symbol", regex("\ [^A-Za-z\d\_\^]+[\s\@\;]"), 1),
@@ -150,60 +150,3 @@
     })
     .flatten()
 }
-
-
-// #let parsing-chem(chem) = {
-//   let rules = (
-//     ("Above", regex("\^\^[^\s\;\@\_]+|\^\^[^\s\;\@]*[\s\;\@]|\^\^\([^\)]\)"), 2),
-//     ("Below", regex("\_\_[^\s\;\@]+|\_\_[^\;\s\@]*[\s\;\@]|\_\_\([^\)]\)"), 2),
-//     ("Superscript", regex("\^[^\s\;\@\_]+|\^[^\s\;\@]*[\s\;\@]|\^\([^\)]\)"), 2),
-//     ("Subscript", regex("\_[^\s\;\@\^]+|\_[^\;\s\@]*[\s\;\@]|\_\([^\)]\)"), 2),
-//     ("Nucleus", regex("[A-Za-z]+|[\(\[\{}].*[\)\}\]]"), 1),
-//     ("Digits", regex("\d+"), 1),
-//     ("Charges", regex("[\-\+]+"), 1),
-//     ("None", regex(".*"), 0),
-//   )
-
-//   _parse((chem,), rules: rules)
-// }
-
-// #let _parse(arr, rules: (), rule: 0) = {
-//   let _type = std.type
-//   if rule == rules.len() {
-//     return arr
-//   }
-//   arr
-//     .map(case => {
-//       if _type(case) == str {
-//         let txt = case
-//         let n = txt.len()
-//         let pointer = 0
-//         let (type, pattern) = rules.at(rule)
-//         let matches = txt.matches(pattern)
-//         let parsed = ()
-
-//         if matches == () {
-//           parsed.push(txt)
-//         } else {
-//           for match in matches {
-//             let (start, end, text) = match
-//             let complete = (type: type, expr: text)
-//             if pointer < start {
-//               parsed.push(txt.slice(pointer, start))
-//               parsed.push(complete)
-//               pointer = end
-//             } else if pointer == start {
-//               parsed.push(complete)
-//               pointer = end
-//             }
-//           }
-//           if pointer < n { parsed.push(txt.slice(pointer, none)) }
-//         }
-//         let rule = rule + 1
-//         return _parse(parsed, rule: rule, rules: rules).flatten()
-//       } else {
-//         case
-//       }
-//     })
-//     .flatten()
-// }

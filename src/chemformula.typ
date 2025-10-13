@@ -1,7 +1,7 @@
 #import "parser.typ": *
 
 #let ch(chem, scope: (:), mode: "Inline") = {
-  let ch = ch.with(scope: scope) // for recursive evaluation
+  let ch = ch.with(scope: scope, mode: mode) // for recursive evaluation
 
   if type(chem) == content {
     if chem.func() == raw {
@@ -15,6 +15,7 @@
 
   let peek = peek.with(arr: tokens)
   let positions = (:)
+  let attach-mode = "r"
   let scripts = ("Superscript", "Subscript", "Above", "Below")
 
   let results = ("",)
@@ -34,9 +35,11 @@
       )
       for (l, r) in braces.pairs() {
         if _type(expr) == str and expr.starts-with(l) and expr.ends-with(r) {
-          expr = (l, r).join(
-            ch(expr.trim(regex((l, r).map(p => "\\" + p).join("|")))),
-          )
+          expr = (l, r)
+            .map(p => "" + p)
+            .join(
+              ch(expr.trim(regex((l, r).map(p => "\\" + p).join("|")))),
+            )
         }
       }
       expr
@@ -44,10 +47,17 @@
     } else if type in scripts {
       let ch = ch.with(mode: "Scripts")
 
-
       // check if nothing is here.
       if positions.len() == 0 {
-        positions.inline = results.pop()
+        // Start of a string, escaped from space -> attach to the right
+        if i == 0 or peek(i - 1).type == "Space" {
+          // put the current type
+          positions.inline = ""
+          attach-mode = "l"
+        } else {
+          positions.inline = results.pop()
+          attach-mode = "r"
+        }
       }
 
       // put the current type
@@ -62,26 +72,40 @@
       }
 
       let formats = (
-        "Superscript": (pos: "tr", rem: regex("[\^\;\s\@]")),
-        "Subscript": (pos: "br", rem: regex("[\_\;\s\@]")),
+        "Superscript": (pos: "t" + attach-mode, rem: regex("[\^\;\s\@]")),
+        "Subscript": (pos: "b" + attach-mode, rem: regex("[\_\;\s\@]")),
         "Above": (pos: "t", rem: regex("[\^\;\s\@]")),
         "Below": (pos: "b", rem: regex("[\_\;\s\@]")),
       )
 
       let base = positions.remove("inline")
-      let args = (:)
+      let verticles = (:)
+      let horizontals = (:)
 
       for (mode, expr) in positions.pairs() {
         let (pos, rem) = formats.at(mode)
-        expr = expr.trim(rem)
-        args.insert(pos, ch(expr.trim(regex("[\(\)]"), repeat: false)))
+        expr = ch(expr.trim(rem).trim(regex("[\(\)]"), repeat: false))
+        if pos in ("t", "b") {
+          verticles.insert(pos, expr)
+        } else {
+          horizontals.insert(pos, expr)
+        }
+      }      
+      
+      base = math.attach(math.limits(base), ..verticles)
+      
+      if attach-mode == "r" {
+        base + math.attach("", ..horizontals)
+      } else {
+        math.attach("", ..horizontals) + base
       }
-
-      math.attach(math.limits(base), ..args)
+      
       positions = (:)
     } else if type == "Space" {
       if peek(i - 1).type == "Digits" and peek(i + 1).type == "Elem" {
-        expr.replace(" ", sym.space.thin, count: 1)
+        if expr.len() > 1 { " " } else { sym.space.thin }
+      } else if peek(i - 1).type in scripts {
+        if expr.len() > 1 { " " } else { "" }
       } else {
         " "
       }
@@ -105,9 +129,11 @@
       }
       $stretch(#arrow, size: size)^above_below$
     } else if type == "Gaseous" {
-      expr.replace("^", sym.arrow.t).replace(regex("\@|\;"), "").trim(" ", repeat: false)
+      expr.replace("^", sym.arrow.t).replace(regex("\@|\;"), "")
+      //.trim(" ", repeat: false)
     } else if type == "Precipitation" {
-      expr.replace("v", sym.arrow.b).replace(regex("\@|\;"), "").trim(" ", repeat: false)
+      expr.replace("v", sym.arrow.b).replace(regex("\@|\;"), "")
+      //.trim(" ", repeat: false)
     } else if type == "Text" {
       eval(mode: "markup", expr.trim("\""), scope: scope)
     } else if type == "Math" {
@@ -117,4 +143,6 @@
   }
   $results.sum()$
 }
+
+#let ch = ch.with(scope: (ch: ch))
 
