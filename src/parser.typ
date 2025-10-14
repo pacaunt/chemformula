@@ -1,3 +1,7 @@
+#let paren-match(string, stack: (), parens: ("(": ")", "{": "}", "[": "]")) = {
+
+}
+
 #let _parse(arr, rules: ()) = {
   if arr.all(it => type(it) != str) {
     return arr
@@ -48,7 +52,7 @@
   }
 }
 
-
+#let mpp = "\([^)(]*(?:\([^)(]*(?:\([^)(]*(?:\([^)(]*\)[^)(]*)*\)[^)(]*)*\)[^)(]*)*\)" // matching parenthesis patterns
 
 #let parsing-chem(chem) = {
   let rules = (
@@ -56,7 +60,7 @@
     ("Below", regex("\_\_[^\s\;\@]+|\_\_[^\;\s\@]*[\s\;\@]|\_\_\([^\)]\)"), 2),
     ("Superscript", regex("\^[^\s\;\@\_]+|\^[^\s\;\@]*[\s\;\@]|\^\([^\)]\)"), 2),
     ("Subscript", regex("\_[^\s\;\@\^]+|\_[^\;\s\@]*[\s\;\@]|\_\([^\)]\)"), 2),
-    ("Nucleus", regex("[A-Za-z]+|\[[^\]\\\]*\]+|\([^\)\\\]*\)+|\{[^\}\\\]*\}"), 1),
+    ("Nucleus", regex("[A-Za-z]+|\[[^\]\\\]*\]+|" + mpp + "|\{[^\}\\\]*\}"), 1),
     ("Digits", regex("\d+"), 1),
     ("Charges", regex("[\-\+]+"), 1),
     ("Parens", regex("[\\\\(\)\[\]\{\}]+"), 1),
@@ -122,7 +126,7 @@
   results
 }
 
-#let mpp = "\([^)(]*(?:\([^)(]*(?:\([^)(]*(?:\([^)(]*\)[^)(]*)*\)[^)(]*)*\)[^)(]*)*\)" // matching parenthesis patterns
+
 
 #let parsing-reaction(chem, mode: "Inline") = {
   let rules = (
@@ -131,13 +135,13 @@
     ("Text", regex("\"[^\"]*\""), 3),
     ("Precipitation", regex("\s+v[\s\@\;]+"), 2),
     ("Gaseous", regex("\s\^[\s\@\;]+"), 3),
-    ("Above", regex("\^\^[^\s\;\@\_]+|\^\^[^\s\;\@]*[\s\;\@]"), 3),
-    ("Below", regex("\_\_[^\s\;\@\^]+|\_\_[^\;\s\@]*[\s\;\@]"), 3),
-    ("Superscript", regex("\^[^\s\;\@\_]+|\^[^\s\;\@]*[\s\;\@]"), 3),
-    ("Subscript", regex("\_[^\s\;\@\^]+|\_[^\;\s\@]*[\s\;\@]"), 3),
+    ("Above", regex("\^\^" + mpp + "|\^\^[^\s\;\@\_]+|\^\^[^\s\;\@]*[\s\;\@]"), 3),
+    ("Below", regex("\_\_" + mpp + "|\_\_[^\s\;\@\^]+|\_\_[^\;\s\@]*[\s\;\@]"), 3),
+    ("Superscript", regex("\^" + mpp + "|\^[^\s\;\@\_]+|\^[^\s\;\@]*[\s\;\@]"), 3),
+    ("Subscript", regex("\_" + mpp + "|\_[^\s\;\@\^]+|\_[^\;\s\@]*[\s\;\@]"), 3),
     ("Symbol", regex("\ [^A-Za-z\d\_\^]+[\s\@\;]"), 1),
     ("Space", regex("\s+"), 2),
-    ("Elem", regex("\S+"), 1),
+    ("Elem", regex("" + mpp + "\d*|\S+"), 1),
     ("None", regex(".*"), 0),
   )
 
