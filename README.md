@@ -56,7 +56,7 @@ Typst Packages for easy and extensible chemical formula formatting.
 
 ### Nuclides, Isotopes 
 ```typ
-#ch("^227_90 Th+") // Attached to " ". So it will not scale with text.
+#ch("^227_90 Th+")
 
 #ch("^227_(90)Th+")
 
