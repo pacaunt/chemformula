@@ -49,6 +49,7 @@ Typing `^^` gives the ability to put things above the elements. This operator ca
 <img alt="example-04" src="https://github.com/user-attachments/assets/998bb37f-5368-41f6-b847-676a946af992" />
 
 ### Stoichiometric Numbers 
+Since the content is evaluated in math mode, the fractions are rendered by default. If one space is present between the compound and digits, then thin space is used. If more than one spaces are typed, then full one normal space will be used.
 ```typ
 #ch("2H2O") // Tight 
 
@@ -63,6 +64,7 @@ Typing `^^` gives the ability to put things above the elements. This operator ca
 <img  alt="example-05" src="https://github.com/user-attachments/assets/9713350a-43db-416d-8bc7-52ca6a48ae6a" />
 
 ### Nuclides, Isotopes 
+The syntax writing nuclides is *preceding* the `^` for mass number or `_` for atomic number with space/or begining of the string. Otherwise, the operator will attach to the preceding content.
 ```typ
 #ch("^227_90 Th+")
 
@@ -75,6 +77,7 @@ Typing `^^` gives the ability to put things above the elements. This operator ca
 <img  alt="example-06" src="https://github.com/user-attachments/assets/f09940cb-58db-4a9d-a90c-f9d629f369d4" />
 
 ### Parenthesis, Braces, Brackets
+In Typst, parentheses are automatically sized by default. If you finding this ugly, you can disrupt them by typing `\` before the parentheses group. To force a group of parenthesis between substances to big-size, wrap the whole reaction with [display](https://typst.app/docs/reference/introspection/counter/#definitions-display) function.
 ```typ
 #ch("(NH4)2S") // Automatic sizing 
 
@@ -87,6 +90,7 @@ $display(ch("CH4 + 2(O2 + 7/2N2)"))$ // Hack with math mode
 <img  alt="example-07" src="https://github.com/user-attachments/assets/37520c8e-d760-406a-9e95-9ac9e870a193" />
 
 ### States of Aggregation 
+Normally, lower case letters are considered math variables, and multiple form of them will be symbol/variable call. This follows the Typst's naive math syntax. However, `(aq)` is preserved by the parser as math variable that evaluates to `$a q$`. 
 ```typ
 #ch("H2(aq)")
 
@@ -96,8 +100,11 @@ $display(ch("CH4 + 2(O2 + 7/2N2)"))$ // Hack with math mode
 ```
 <img alt="example-08" src="https://github.com/user-attachments/assets/a73906d3-2fec-47f7-8573-be5919a43c06" />
 
+You can use `$..$` syntax for escaping the parser so that the content inside will be directly evaluated by math mode. 
+
 
 ### Radical Dots 
+`*` or `.` in superscript and subscript mode will be used as radical notation. This uses `sym.bullet` to display.
 ```typ
 #ch("OCO^*-")
 
@@ -106,6 +113,7 @@ $display(ch("CH4 + 2(O2 + 7/2N2)"))$ // Hack with math mode
 <img alt="example-09" src="https://github.com/user-attachments/assets/81bd6016-e607-44a0-80c9-c1d9dd58dafe" />
 
 ### Escaped Modes
+Contents inside `$..$` will be escaped by the parser and evaluated in math mode directly bypassing other grammars.  So you can type greek letters or other variables in math in this mode, for example.
 ```typ
 // Use Math Mode!
 #ch("NO_x") is the same as #ch("NO_$x$")
@@ -144,6 +152,7 @@ $display(ch("CH4 + 2(O2 + 7/2N2)"))$ // Hack with math mode
 <img alt="example-12" src="https://github.com/user-attachments/assets/34d651ce-e4c3-4933-833e-d3b36e33bcb8" />
 
 ### Precipitation and Gas 
+This feature has *very* dedicate syntax: the `^` or `v` must precede -and- folows by white space.
 ```typ
 #ch("SO4^2- + Ba^2+ -> BaSO4 v")
 
@@ -160,6 +169,7 @@ $
 <img  alt="example-14" src="https://github.com/user-attachments/assets/9bf7f6a3-92bf-40b8-a9fc-20a178b10bcd" />
 
 ### More Examples 
+Integration seamlessly with Typst's math mode.
 ```typ
 $  
   ch("Zn^2+ <=>[+ 2 OH-][+ 2 H+]")
@@ -169,6 +179,8 @@ $
 $
 ```
 <img alt="example-15" src="https://github.com/user-attachments/assets/4da96416-ec73-4100-af90-23610ac7b3b1" />
+
+You can use user-defined functions in `ch`. Howeer, you must add the definition of this function into the `scope` parameter of `ch`.
 
 ```typ
 #let tg = text.with(fill: olive)
@@ -181,3 +193,6 @@ $ ch("Hg^2+ ->[I-] HgI2
 ```
 <img alt="example-16" src="https://github.com/user-attachments/assets/a870ad91-612e-471f-8bf6-ea8211311e08" />
 
+
+# Acknowledgement 
+This packages' examples and syntax are highly inspired by [mhchem](https://ctan.org/pkg/mhchem?lang=en) package. Please feel free to give any suggestions for improving the feature of this package!
