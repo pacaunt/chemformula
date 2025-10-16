@@ -144,7 +144,7 @@ $display(ch("CH4 + 2(O2 + 7/2N2)"))$ // Hack with math mode
 <img width="800" height="193" alt="example-13" src="https://github.com/user-attachments/assets/f52e47bb-ed98-487b-a525-ca3f567de329" />
 
 ### Alignments
-```example
+```typ
 $ ch("A &-> B") \
   ch("B &-> C + D")
 $
