@@ -1,7 +1,7 @@
 # chemformula
 Typst Packages for easy and extensible chemical formula formatting. 
 ## Examples 
-### Chemcial Formulae
+### Chemical Formulae
 ```typ
 #ch("H2O")
 
