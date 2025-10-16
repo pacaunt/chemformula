@@ -80,13 +80,14 @@ $display(ch("CH4 + 2(O2 + 7/2N2)"))$ // Hack with math mode
 
 ### States of Aggregation 
 ```typ
-// #ch("H2(aq)")
+#ch("H2(aq)")
 
 #ch("CO3^2-_((aq))")
 
 #ch("NaOH(aq, $oo$)")
 ```
-<img width="800" height="190" alt="example-08" src="https://github.com/user-attachments/assets/4e7d2e9e-cb92-48fc-93a7-6edd938401b4" />
+<img width="800" height="236" alt="example-08" src="https://github.com/user-attachments/assets/a73906d3-2fec-47f7-8573-be5919a43c06" />
+
 
 ### Radical Dots 
 ```typ
