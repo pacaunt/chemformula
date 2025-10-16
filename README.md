@@ -8,6 +8,7 @@ Typst Packages for easy and extensible chemical formula formatting.
 #ch("Sb2O3")
 ```
 <img width="800" height="186" alt="example-01" src="https://github.com/user-attachments/assets/17373f66-373d-49ed-b497-16241df870c4" />
+
 ### Chemical Equations
 ```typ
 #ch("CO2 + C -> 2 CO")
