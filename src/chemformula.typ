@@ -1,8 +1,10 @@
 #import "parser.typ": *
 
+
 #let recursive-parse(chem, mode: "Inline", skip: 0) = {
   let EOT = "@"
   let tokens = parsing-reaction(chem + EOT, mode: mode)
+  let recursive-parse = recursive-parse.with(mode: mode)
 
   let peek = peek.with(arr: tokens)
   let positions = (:)
@@ -102,11 +104,11 @@
       }
 
       (
-        "\"\"attach(#math.limits($"
+        "\"\"#math.attach(math.limits($"
           + base
           + "$), "
           + {
-            args.pairs().map(((k, v)) => k + ": " + v).join(", ") + ")"
+            args.pairs().map(((k, v)) => k + ": $" + v + "$").join(", ") + ") "
           }
       )
       positions = (:)

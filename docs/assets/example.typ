@@ -80,7 +80,7 @@ $display(ch("CH4 + 2(O2 + 7/2N2)"))$ // Hack with math mode
 
 = States of Aggregation 
 ```example 
-#ch("H2(aq)")
+// #ch("H2(aq)")
 
 #ch("CO3^2-_((aq))")
 
@@ -158,8 +158,8 @@ $
 $ ch("Cu^^II Cl2 + K2CO3 -> tg(Cu^^II)CO3 v + 2 KCl") $
 
 // Multiline Supported
-$ ch("Hg^2+ ->[I-] HgI2 
-           ->[I-] [Hg^II I4]^2-
+$ ch("Hg^2+ ->[I-] HgI2
+            ->[I-] [Hg^II I4]^2-
 ") $
 ```
 

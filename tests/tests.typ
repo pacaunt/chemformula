@@ -55,7 +55,6 @@
 #parsing-reaction("$e$- CO^*-")
 
 #ch("CH3COOH(aq) + ZnSO4 v  NO3- CO^*- ")
-$ #ch(`F "E#strong[HI]" is not allowed. So Flexible.`) $
 
 #ch("K3[Fe(CN)6]")
 
@@ -78,7 +77,7 @@ $ ch("Cu^^+II;^2+ + 2 OH-") $
 
 Package CHemformula
 
-#ch("CH$e$mFor$mu$uLa_0.1.0")
+#ch("CH $e$ mFor$mu$uLa_0.1.0")
 
 
 
@@ -110,9 +109,9 @@ Package CHemformula
 
 #parsing-chem("^(aq)")
 #let ch = ch.with(scope: (ch: ch))
-$ ch("Zn^2+ (aq) vd $#ch(`e`)_\"..\"$ (aq)") $
+$ ch("Zn^2+ (aq) $#ch(`e`)_\"..\"$ (aq)") $
 
-$ #ch(`CH$e$m^F_O;R$mu$uLa$""_"0.1.0"$`) $
+$ #ch(`CH$e$m^F_O;R$mu$ uLa$""_"0.1.0"$`) $
 
 #ch("H2SO4")
 
@@ -121,8 +120,6 @@ $ #ch(`CH$e$m^F_O;R$mu$uLa$""_"0.1.0"$`) $
 #ch("NO3-")
 
 #ch("SO4^2-")
-
-#parsing-chem("SO_4^2-")
 
 #ch("SO_4;^2-")
 
@@ -150,13 +147,13 @@ $ #ch(`CH$e$m^F_O;R$mu$uLa$""_"0.1.0"$`) $
 
 #ch("^99_33 Th+")
 
-#ch("3H2(g) + N2(g) <=>[\"#h(1em)\"][de] 2NH3(g)")
+#ch("3H2(g) + N2(g) <=>[\"#h(1em)\"][\"de\"] 2NH3(g)")
 
 #ch("_3^2;Th")
 
 #ch("A + 4 B")
 
-#ch("$alpha\"-Ketoguterate\"$(s) + 3 H2O(l) ->[$h nu$] de")
+#ch("$alpha\"-Ketoguterate\"$(s) + 3 H2O(l) ->[$h nu$]")
 
 #ch("_2^3+;Th + $space(a^2)$ (g) _3^4;H")
 

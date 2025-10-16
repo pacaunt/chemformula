@@ -1,7 +1,14 @@
-#let paren-match(string, stack: (), parens: ("(": ")", "{": "}", "[": "]")) = {
 
+#let peek(arr: (), i) = {
+  if i >= arr.len() or i < 0 {
+    return (type: "None", expr: "@")
+  } else {
+    arr.at(i)
+  }
 }
-
+/// Parsing a string using regex rules.
+/// The rules determine which is going to be the match, arranging from index and strength of the pattern.
+/// Stronger patterns can override the weaker pattern.
 #let _parse(arr, rules: ()) = {
   if arr.all(it => type(it) != str) {
     return arr
@@ -13,6 +20,8 @@
 
           let index = 0
           let results = ()
+
+          // Main Loop
           while curr.len() > 0 {
             let matches = rules.map(r => {
               let (type, rule, strength) = r
@@ -20,6 +29,7 @@
                 (type: type, match: curr.match(rule), strength: strength)
               }
             })
+            // Arrange from strength, and if same strength is met, arrange from the starting index
             let success = matches.filter(i => i != none).sorted(key: info => (-info.strength, info.match.start))
 
             if success != () {
@@ -41,14 +51,6 @@
         }
       })
       .flatten()
-  }
-}
-
-#let peek(arr: (), i) = {
-  if i >= arr.len() or i < 0 {
-    return (type: "None", expr: "@")
-  } else {
-    arr.at(i)
   }
 }
 
@@ -135,16 +137,16 @@
     ("Text", regex("\"[^\"]*\""), 3),
     ("Precipitation", regex("\s+v[\s\@\;]+"), 2),
     ("Gaseous", regex("\s\^[\s\@\;]+"), 3),
-    ("Above", regex("\^\^" + mpp + "|\^\^[^\s\;\@\_]+|\^\^[^\s\;\@]*[\s\;\@]"), 3),
-    ("Below", regex("\_\_" + mpp + "|\_\_[^\s\;\@\^]+|\_\_[^\;\s\@]*[\s\;\@]"), 3),
-    ("Superscript", regex("\^" + mpp + "|\^[^\s\;\@\_]+|\^[^\s\;\@]*[\s\;\@]"), 3),
-    ("Subscript", regex("\_" + mpp + "|\_[^\s\;\@\^]+|\_[^\;\s\@]*[\s\;\@]"), 3),
+    ("Above", regex("\^\^" + mpp + "|\^\^[^\s\;\@\_\(\)]+|\^\^[^\s\;\@]*[\s\;\@]"), 3),
+    ("Below", regex("\_\_" + mpp + "|\_\_[^\s\;\@\^\(\)]+|\_\_[^\;\s\@]*[\s\;\@]"), 3),
+    ("Superscript", regex("\^" + mpp + "|\^[^\s\;\@\_\(\)]+|\^[^\s\;\@]*[\s\;\@]"), 3),
+    ("Subscript", regex("\_" + mpp + "|\_[^\s\;\@\^\(\)]+|\_[^\;\s\@]*[\s\;\@]"), 3),
     ("Symbol", regex("\ [^A-Za-z\d\_\^]+[\s\@\;]"), 1),
     ("Space", regex("\s+"), 2),
     ("Elem", regex("" + mpp + "\d*|\S+"), 1),
     ("None", regex(".*"), 0),
   )
-
+  //chem = split-parens(chem).join(";")
   _parse((chem,), rules: rules)
     .map(it => {
       if it.type == "Elem" {
