@@ -161,12 +161,12 @@ $
 $
 ```
 <img width="800" height="182" alt="example-15" src="https://github.com/user-attachments/assets/4da96416-ec73-4100-af90-23610ac7b3b1" />
+
 ```typ
 #let tg = text.with(fill: olive)
 #let ch = ch.with(scope: (tg: tg, ch: ch))
 $ ch("Cu^^II Cl2 + K2CO3 -> tg(Cu^^II)CO3 v + 2 KCl") $
 
-// Multiline Supported
 $ ch("Hg^2+ ->[I-] HgI2
             ->[I-] [Hg^II I4]^2-
 ") $
