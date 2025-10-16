@@ -52,11 +52,9 @@
 
 #ch("2  H2O") // Very Spaced 
 
-#ch("1/2 H2O")
+#ch("1/2 H2O") // Automatic Fractions 
 
-#ch("$1/2$H2O") // Math mode
-
-#ch("$n$H2O")
+#ch("1\/2 H2O") // 
 ```
 = Nuclides, Isotopes 
 ```example
@@ -71,16 +69,18 @@
 
 = Parenthesis, Braces, Brackets
 ```example
-#ch("(NH4)2S")
+#ch("(NH4)2S") // Automatic sizing 
 
-#ch("[{(X2)3}2]^3+") // No automatic sizing
+#ch("[{(X2)3}2]^3+") 
 
-$display(ch("CH4 + 2") thin (ch("O2 + $79/21$N2")))$ // Hack with math mode
+#ch("\[{(X2)3}2]^3+") // To disable this behavior, just type `\`
+
+$display(ch("CH4 + 2(O2 + 7/2N2)"))$ // Hack with math mode
 ```
 
 = States of Aggregation 
 ```example 
-#ch("H2(aq)")
+// #ch("H2(aq)")
 
 #ch("CO3^2-_((aq))")
 
@@ -94,21 +94,19 @@ $display(ch("CH4 + 2") thin (ch("O2 + $79/21$N2")))$ // Hack with math mode
 #ch("NO^((2*)-)")
 ```
 
-= Math Modes
+= Escaped Modes
 ```example 
 // Use Math Mode!
-#ch("NO_$x$")
+#ch("NO_x") is the same as #ch("NO_$x$")
 
-#ch("Fe^$n$+")
-
-#ch("$mu\-$Cl") // Greek Letters 
+#ch("Fe^n+") is the same as #ch("Fe^$n+$")
 
 #ch("Fe(CN)_$6/2$") // Fractions!
-```
 
-= Escaped Texts 
-```example 
-#ch("\"*CO*\"_2^3") // bold text 
+#ch("$#[*CO*]$_2^3") // bold text 
+
+// Or just type texts...
+#ch("mu\"-\"Cl") // Hyphen Escaped
 ```
 = Reaction Arrows 
 ```example
@@ -123,7 +121,7 @@ $display(ch("CH4 + 2") thin (ch("O2 + $79/21$N2")))$ // Hack with math mode
 
 = Above/Below Arrow Text 
 ```example
-#ch("A ->[Above] B")
+#ch("A ->[Delta] B")
 
 #ch("A <=>[Above][Below] B")
 
@@ -139,8 +137,8 @@ $display(ch("CH4 + 2") thin (ch("O2 + $79/21$N2")))$ // Hack with math mode
 
 = Alignments
 ```example
-$ ch("A $&$-> B") \
-  ch("B $&$-> C + D")
+$ ch("A &-> B") \
+  ch("B &-> C + D")
 $
 ```
 = More Examples 
@@ -157,11 +155,11 @@ $
 ```example
 #let tg = text.with(fill: olive)
 #let ch = ch.with(scope: (tg: tg, ch: ch))
-$ ch("Cu^^II Cl2 + K2CO3 -> $tg(ch(\"Cu^^II\"))$CO3 v + 2 KCl") $
+$ ch("Cu^^II Cl2 + K2CO3 -> tg(Cu^^II)CO3 v + 2 KCl") $
 
 // Multiline Supported
-$ ch("Hg^2+ ->[I-] HgI2 
-           ->[I-] [Hg^II I4]^2-
+$ ch("Hg^2+ ->[I-] HgI2
+            ->[I-] [Hg^II I4]^2-
 ") $
 ```
 
