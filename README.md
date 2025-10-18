@@ -184,7 +184,7 @@ $
 ```
 <img alt="example-15" src="https://github.com/user-attachments/assets/4da96416-ec73-4100-af90-23610ac7b3b1" />
 
-You can use user-defined functions in `ch`. Howeer, you must add the definition of this function into the `scope` parameter of `ch`.
+You can use user-defined functions in `ch`. However, you must add the definition of this function into the `scope` parameter of `ch`.
 
 ```typ
 #let tg = text.with(fill: olive)
