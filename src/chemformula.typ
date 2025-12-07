@@ -108,7 +108,7 @@
           + base
           + "$), "
           + {
-            args.pairs().map(((k, v)) => k + ": $" + v + "$").join(", ") + ") "
+            args.pairs().map(((k, v)) => k + ": $" + v + "$").join(", ") + ")"
           }
       )
       positions = (:)

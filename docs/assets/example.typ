@@ -1,4 +1,4 @@
-#import "@local/chemformula:0.1.0": ch
+#import "@local/chemformula:0.1.1": ch
 
 #set page(width: 4in, margin: 0.2in, height: auto)
 
@@ -162,6 +162,3 @@ $ ch("Hg^2+ ->[I-] HgI2
             ->[I-] [Hg^II I4]^2-
 ") $
 ```
-
-
-
