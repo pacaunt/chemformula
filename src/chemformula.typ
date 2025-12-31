@@ -108,7 +108,7 @@
           + base
           + "$), "
           + {
-            args.pairs().map(((k, v)) => k + ": $" + v + "$").join(", ") + ")"
+            args.pairs().map(((k, v)) => k + ": $" + v + "$").join(", ") + ");"
           }
       )
       positions = (:)
@@ -173,4 +173,3 @@
 }
 
 #let ch = ch.with(scope: (ch: ch))
-
