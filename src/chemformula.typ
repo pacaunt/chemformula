@@ -15,7 +15,7 @@
   let _type = std.type
   for (i, toks) in tokens.enumerate() {
     if skip > 0 {
-      skip -= 1 
+      skip -= 1
       continue
     }
     let (type, expr) = toks
@@ -32,9 +32,15 @@
       )
       for (l, r) in braces.pairs() {
         if _type(expr) == str and expr.starts-with(l) and expr.ends-with(r) {
-          expr = (l, r).join(
-            recursive-parse(expr.trim(regex((l, r).map(p => "\\" + p).join("|")), repeat: false)),
-          )
+          let inner = expr.trim(regex((l, r).map(p => "\\" + p).join("|")), repeat: false)
+          // Handle states of aggregation - make them upright
+          let states-of-aggregation = ("s", "l", "g", "aq")
+          if inner in states-of-aggregation {
+            inner = "upright(" + inner + ")"
+          } else {
+            inner = recursive-parse(inner)
+          }
+          expr = (l, r).join(inner)
         }
       }
       expr.replace(regex("\"*[A-Z][a-z]*\"*"), nuc => {
@@ -169,7 +175,7 @@
     }
   }
 
-  eval(mode: "math", recursive-parse(chem, mode: mode), scope: (aq: $a q$) + scope)
+  eval(mode: "math", recursive-parse(chem, mode: mode), scope: (aq: $upright(a q)$) + scope)
 }
 
 #let ch = ch.with(scope: (ch: ch))
