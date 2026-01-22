@@ -145,18 +145,13 @@
         size = "2em"
       }
       " stretch(" + arrow + ", size: #{" + size + "})^(" + above + ")_(" + below + ")"
-      //$stretch(#arrow, size: size)^above_below$
     } else if type == "Gaseous" {
       expr.replace("^", sym.arrow.t).replace(regex("\@|\;"), "")
-      //.trim(" ", repeat: false)
     } else if type == "Precipitation" {
       expr.replace("v", sym.arrow.b).replace(regex("\@|\;"), "")
-      //.trim(" ", repeat: false)
     } else if type == "Text" {
       expr
-      // eval(mode: "markup", expr.trim("\""), scope: scope)
     } else if type == "Math" {
-      //eval(mode: "math", expr.trim("$"), scope: scope)
       expr.trim("$")
     } else {
       expr

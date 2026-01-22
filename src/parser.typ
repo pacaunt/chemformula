@@ -86,6 +86,16 @@
   _parse((txt,), rules: rules)
 }
 
+#let parse-bond(txt) = {
+  let rules = (
+    ("single", regex("")),
+    ("double", regex("<->")),
+    ("triple", regex("<-")),
+  ).map(r => r + (1,))
+
+  _parse((txt,), rules: rules)
+}
+
 #let position-chem(chem, mode: "Inline") = {
   let tokens = parsing-chem(chem)
   let results = ()
