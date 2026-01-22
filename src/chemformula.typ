@@ -1,8 +1,25 @@
 #import "parser.typ": *
 
+#let build-bond(
+  length: 2.5em,
+  n: 1,
+  sep: 0.3em,
+  baseline: 0.2em,
+  inset: (x: 0.1em),
+  ..styles,
+) = box(
+  baseline: baseline,
+  height: 1em,
+  inset: inset,
+  align(horizon, stack(
+    dir: ttb,
+    spacing: sep,
+    ..(box(line(length: length, ..styles)),) * n,
+  )),
+)
+
 
 #let recursive-parse(chem, mode: "Inline", skip: 0) = {
-  let EOT = "@"
   let tokens = parsing-reaction(chem + EOT, mode: mode)
   let recursive-parse = recursive-parse.with(mode: mode)
 
@@ -53,11 +70,6 @@
       if positions.len() == 0 {
         // Start of a string, escaped from space -> attach to the right
         if i == 0 or peek(i - 1).type == "Space" {
-          // if peek(i + 1).type not in scripts {
-          //   positions.inline = peek(i + 1).expr //"\"\""
-          // } else {
-          //   positions.inline = "\"\""
-          // }
           attach-mode = "l"
         } else {
           positions.inline = results.pop()
@@ -71,7 +83,6 @@
       let next = peek(i + 1)
       if next.type in scripts {
         if not next.type in positions {
-          //positions.insert(type, expr)
           continue
         }
       } else {
@@ -105,10 +116,9 @@
         if expr.starts-with("(") and expr.ends-with(")") {
           expr = expr.trim(regex("\(|\)"), repeat: false)
         }
-        expr = recursive-parse(expr.trim(rem))
+        expr = recursive-parse(expr.trim(rem)).trim(rem)
         args.insert(pos, expr)
       }
-
       (
         "\"\"#math.attach(math.limits($"
           + base
@@ -149,6 +159,14 @@
       expr.replace("^", sym.arrow.t).replace(regex("\@|\;"), "")
     } else if type == "Precipitation" {
       expr.replace("v", sym.arrow.b).replace(regex("\@|\;"), "")
+    } else if type in ("SingleBond", "DoubleBond", "TripleBond") {
+      if type == "SingleBond" {
+        expr.trim(regex("-")) + "#_single-bond"
+      } else if type == "DoubleBond" {
+        expr.trim(regex("==")) + "#_double-bond"
+      } else if type == "TripleBond" {
+        expr.trim(regex("~~")) + "#_triple-bond"
+      }
     } else if type == "Text" {
       expr
     } else if type == "Math" {
@@ -161,7 +179,17 @@
   results.sum()
 }
 
-#let ch(chem, scope: (:), mode: "Inline", scale-paren: true) = {
+#let ch(
+  chem,
+  scope: (:),
+  mode: "Inline",
+  scale-paren: true,
+  bond-length: 1em,
+  bond-sep: 0.3em,
+  bond-baseline: 0.15em,
+  bond-styles: (:),
+  bond-inset: 0.1em,
+) = {
   if type(chem) == content {
     if chem.func() == raw {
       chem = chem.text
@@ -169,8 +197,24 @@
       chem = chem.text
     }
   }
-
-  eval(mode: "math", recursive-parse(chem, mode: mode), scope: (aq: $upright(a q)$) + scope)
+  let build-bond = build-bond.with(
+    length: bond-length,
+    baseline: bond-baseline,
+    sep: bond-sep,
+    inset: bond-inset,
+    ..bond-styles,
+  )
+  eval(
+    mode: "math",
+    recursive-parse(chem, mode: mode),
+    scope: (
+      aq: $upright(a q)$,
+      "_single-bond": build-bond(n: 1),
+      "_double-bond": build-bond(n: 2),
+      "_triple-bond": build-bond(n: 3),
+    )
+      + scope,
+  )
 }
 
 #let ch = ch.with(scope: (ch: ch))

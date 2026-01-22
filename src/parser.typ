@@ -54,6 +54,8 @@
   }
 }
 
+#let EOT = "@"
+
 #let mpp = "\([^)(]*(?:\([^)(]*(?:\([^)(]*(?:\([^)(]*\)[^)(]*)*\)[^)(]*)*\)[^)(]*)*\)" // matching parenthesis patterns
 
 #let parsing-chem(chem) = {
@@ -64,8 +66,12 @@
     ("Subscript", regex("\_[^\s\;\@\^]+|\_[^\;\s\@]*[\s\;\@]|\_\([^\)]\)"), 2),
     ("Nucleus", regex("[A-Za-z]+|\[[^\]\\\]*\]+|" + mpp + "|\{[^\}\\\]*\}"), 1),
     ("Digits", regex("\d+"), 1),
-    ("Charges", regex("[\-\+]+"), 1),
+    ("Charges", regex("[\-\+]{1}"), 1),
+    // ("Signs", regex("\s*[=~][\s\@\;]+"), 2),
     ("Parens", regex("[\\\\(\)\[\]\{\}]+"), 1),
+    ("SingleBond", regex("--"), 2),
+    ("DoubleBond", regex("=="), 2),
+    ("TripleBond", regex("~~"), 2),
     ("None", regex(".*"), 0),
   )
 
@@ -81,16 +87,6 @@
     ("<=", regex("<=")),
     ("=>", regex("=>")),
     ("Args", regex("\[[^\]]*\]")),
-  ).map(r => r + (1,))
-
-  _parse((txt,), rules: rules)
-}
-
-#let parse-bond(txt) = {
-  let rules = (
-    ("single", regex("")),
-    ("double", regex("<->")),
-    ("triple", regex("<-")),
   ).map(r => r + (1,))
 
   _parse((txt,), rules: rules)

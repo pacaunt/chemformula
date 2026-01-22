@@ -218,3 +218,36 @@ $ {a/b}_2 lr("{" d/3 #sym.paren.r) $
 
 #parsing-reaction("((a2))3)4)5")
 
+#parsing-chem("CH3- ==CH3")
+
+#parsing-chem("CH2~C")
+
+#parsing-chem("(AH)2- + (BG)")
+
+#parsing-reaction("(AH)2- - (BG)")
+
+#parsing-reaction("He^2+@")
+
+#recursive-parse("He^2+ - C")
+
+#recursive-parse("(AH)2- - (BG)")
+= Normal
+#ch("A--B==B~~CH2")
+
+#ch("CH3--CH2--CH2--OH")
+
+#ch("HC~~CH")
+
+= New Fonts 
+#show math.equation: set text(font: "Lete Sans Math")
+#ch("A--B==B~~CH2")
+
+#ch("CH3--CH2--CH2--OH")
+
+#ch("HC~~CH")
+
+#ch("A--B==B~~CH2")
+
+#ch("CH3--CH2--CH2--OH")
+
+#ch("HC~~CH")
