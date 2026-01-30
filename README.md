@@ -172,6 +172,17 @@ $
 ```
 <img  alt="example-14" src="https://github.com/user-attachments/assets/9bf7f6a3-92bf-40b8-a9fc-20a178b10bcd" />
 
+### Bonds 
+You can use a double dash `--`, to indicate single bond, double equal sign `==` for double bonds, and double tilde `~~` for triple bonds. 
+```typ
+#ch("CH3--CH2--O-Na+")
+
+#ch("CH3C==CH--CH3")
+
+#ch("HC~~CH")
+```
+<img alt="example-15" src=https://github.com/pacaunt/chemformula/blob/main/docs/assets/example/example15.png>
+
 ### More Examples 
 Integration seamlessly with Typst's math mode.
 ```typ

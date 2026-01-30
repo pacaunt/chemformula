@@ -1,4 +1,4 @@
-#import "@local/chemformula:0.1.1": ch
+#import "@local/chemformula:0.1.2": ch
 
 #set page(width: 4in, margin: 0.2in, height: auto)
 
@@ -85,6 +85,8 @@ $display(ch("CH4 + 2(O2 + 7/2N2)"))$ // Hack with math mode
 #ch("CO3^2-_((aq))")
 
 #ch("NaOH(aq, $oo$)")
+
+#ch("NaHCO3(s)")
 ```
 
 = Radical Dots 
@@ -140,6 +142,15 @@ $display(ch("CH4 + 2(O2 + 7/2N2)"))$ // Hack with math mode
 $ ch("A &-> B") \
   ch("B &-> C + D")
 $
+```
+
+= Bonds 
+```example 
+#ch("CH3--CH2--O-Na+")
+
+#ch("CH3C==CH--CH3")
+
+#ch("HC~~CH")
 ```
 = More Examples 
 ```example

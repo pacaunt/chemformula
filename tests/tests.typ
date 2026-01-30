@@ -251,3 +251,9 @@ $ {a/b}_2 lr("{" d/3 #sym.paren.r) $
 #ch("CH3--CH2--CH2--OH")
 
 #ch("HC~~CH")
+
+#ch("CH3==CH2")
+
+#ch("H^18;O--C==^18;O")
+
+#recursive-parse("#text(\"defasdfeac\")")
