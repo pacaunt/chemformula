@@ -5,7 +5,7 @@ Chemformula uses Typst's [math mode](https://typst.app/docs/reference/math/) to 
 # Usage 
 Import this pacakge by 
 ```typ
-#import "@preview/chemformula:0.1.1": ch
+#import "@preview/chemformula:0.1.2": ch
 ```
 ## Examples 
 
