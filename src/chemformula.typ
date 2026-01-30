@@ -5,6 +5,7 @@
   n: 1,
   sep: 0.3em,
   baseline: 0.2em,
+  stroke: 1pt,
   inset: (x: 0.1em),
   ..styles,
 ) = box(
@@ -14,7 +15,7 @@
   align(horizon, stack(
     dir: ttb,
     spacing: sep,
-    ..(box(line(length: length, ..styles)),) * n,
+    ..(box(line(length: length, stroke: stroke, ..styles)),) * n,
   )),
 )
 
@@ -189,6 +190,7 @@
   bond-baseline: 0.15em,
   bond-styles: (:),
   bond-inset: 0.1em,
+  bond-stroke: 1pt,
 ) = {
   if type(chem) == content {
     if chem.func() == raw {
@@ -202,6 +204,7 @@
     baseline: bond-baseline,
     sep: bond-sep,
     inset: bond-inset,
+    stroke: bond-stroke,
     ..bond-styles,
   )
   eval(

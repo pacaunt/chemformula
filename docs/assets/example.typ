@@ -152,6 +152,26 @@ $
 
 #ch("HC~~CH")
 ```
+#metadata[
+The styling of the bonds can be set by using the following keys:
+```typc
+  bond-length: 1em,
+  bond-sep: 0.3em,
+  bond-baseline: 0.15em,
+  bond-stroke: 1pt,
+  bond-styles: (:),
+  bond-inset: 0.1em,
+```
+in the argument of `ch` function. For example, 
+]
+= Bond Stylings 
+```example
+#ch("CH3--CH2", bond-stroke: 3pt + red)
+
+#ch("O==C(CH3)3", bond-sep: 5pt,)
+
+#ch("O==C(CH3)3", bond-sep: 2pt,)
+```
 = More Examples 
 ```example
 $  
