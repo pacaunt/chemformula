@@ -16,7 +16,7 @@ The number preceding by other letters is subscripted by default.
 
 #ch("Sb2O3")
 ```
-<img alt="example-01" src="https://github.com/user-attachments/assets/17373f66-373d-49ed-b497-16241df870c4" />
+<img alt="example-01" src="https://github.com/pacaunt/chemformula/blob/main/docs/assets/example1.png" />
 
 ### Chemical Equations
 You can use `->` to draw arrow. The length will changes according to the content being above or below the arrow. The arrow is rendered using Typst's [stretch function](https://typst.app/docs/reference/math/stretch/).
@@ -27,7 +27,7 @@ You can use `->` to draw arrow. The length will changes according to the content
 #ch("Hg^2+ ->[I^-] HgI2
            ->[I^-] [Hg^II I4]^2- ")
 ```
-<img alt="example-02" src="https://github.com/user-attachments/assets/c986a131-9765-4118-9cc9-303ce88d0c16" />
+<img alt="example-02" src="https://github.com/pacaunt/chemformula/blob/main/docs/assets/example2.png" />
 
 ### Charges
 Plus and minus signs coming after the text are superscript positioned by default. However, you may use `^` operator to raise them upper. The `^` operator will superscript the content until a space or a semicolon (`;`) is typed.
@@ -42,7 +42,7 @@ Plus and minus signs coming after the text are superscript positioned by default
 #ch("Y^99+") // or
 #ch("Y^(99+)") // Same
 ```
-<img alt="example-03" src="https://github.com/user-attachments/assets/733f34c4-b12e-4c58-a569-897b6f37dd99" />
+<img alt="example-03" src="https://github.com/pacaunt/chemformula/blob/main/docs/assets/example3.png" />
 
 ### Oxidation States 
 Typing `^^` gives the ability to put things above the elements. This operator captures content in parenthesis/or until black space is met.
@@ -50,7 +50,7 @@ Typing `^^` gives the ability to put things above the elements. This operator ca
 #ch("Fe^^II Fe^^III_2 O4") // or 
 #ch("Fe^^(II)Fe^^(III)_(2)O4") // Same
 ```
-<img alt="example-04" src="https://github.com/user-attachments/assets/998bb37f-5368-41f6-b847-676a946af992" />
+<img alt="example-04" src="https://github.com/pacaunt/chemformula/blob/main/docs/assets/example4.png" />
 
 ### Stoichiometric Numbers 
 Since the content is evaluated in math mode, the fractions are rendered by default. If one space is present between the compound and digits, then thin space is used. If more than one spaces are typed, then full one normal space will be used.
@@ -65,7 +65,7 @@ Since the content is evaluated in math mode, the fractions are rendered by defau
 
 #ch("1\/2 H2O") // 
 ```
-<img  alt="example-05" src="https://github.com/user-attachments/assets/9713350a-43db-416d-8bc7-52ca6a48ae6a" />
+<img  alt="example-05" src="https://github.com/pacaunt/chemformula/blob/main/docs/assets/example5.png" />
 
 ### Nuclides, Isotopes 
 The syntax writing nuclides is *preceding* the `^` for mass number or `_` for atomic number with space/or begining of the string. Otherwise, the operator will attach to the preceding content.
@@ -78,7 +78,7 @@ The syntax writing nuclides is *preceding* the `^` for mass number or `_` for at
 
 #ch("_-1^0 n-")
 ```
-<img  alt="example-06" src="https://github.com/user-attachments/assets/f09940cb-58db-4a9d-a90c-f9d629f369d4" />
+<img  alt="example-06" src="https://github.com/pacaunt/chemformula/blob/main/docs/assets/example6.png" />
 
 ### Parenthesis, Braces, Brackets
 In Typst, parentheses are automatically sized by default. If you finding this ugly, you can disrupt them by typing `\` before the parentheses group. To force a group of parenthesis between substances to big-size, wrap the whole reaction with [display](https://typst.app/docs/reference/introspection/counter/#definitions-display) function.
@@ -91,18 +91,20 @@ In Typst, parentheses are automatically sized by default. If you finding this ug
 
 $display(ch("CH4 + 2(O2 + 7/2N2)"))$ // Hack with math mode
 ```
-<img  alt="example-07" src="https://github.com/user-attachments/assets/37520c8e-d760-406a-9e95-9ac9e870a193" />
+<img  alt="example-07" src="https://github.com/pacaunt/chemformula/blob/main/docs/assets/example7.png" />
 
 ### States of Aggregation 
 Normally, lower case letters are considered math variables, and multiple form of them will be symbol/variable call. This follows the Typst's naive math syntax. However, `(aq)` is preserved by the parser as math variable that evaluates to `$a q$`. 
-```typ
-#ch("H2(aq)")
+```example 
+#ch("H2(g)")
 
 #ch("CO3^2-_((aq))")
 
 #ch("NaOH(aq, $oo$)")
+
+#ch("NaHCO3(s)")
 ```
-<img alt="example-08" src="https://github.com/user-attachments/assets/a73906d3-2fec-47f7-8573-be5919a43c06" />
+<img alt="example-08" src="https://github.com/pacaunt/chemformula/blob/main/docs/assets/example8.png" />
 
 You can use `$..$` syntax for escaping the parser so that the content inside will be directly evaluated by math mode. 
 
@@ -114,7 +116,7 @@ You can use `$..$` syntax for escaping the parser so that the content inside wil
 
 #ch("NO^((2*)-)")
 ```
-<img alt="example-09" src="https://github.com/user-attachments/assets/81bd6016-e607-44a0-80c9-c1d9dd58dafe" />
+<img alt="example-09" src="https://github.com/pacaunt/chemformula/blob/main/docs/assets/example9.png" />
 
 ### Escaped Modes
 Contents inside `$..$` will be escaped by the parser and evaluated in math mode directly bypassing other grammars.  So you can type greek letters or other variables in math in this mode, for example.
@@ -131,7 +133,7 @@ Contents inside `$..$` will be escaped by the parser and evaluated in math mode 
 // Or just type texts...
 #ch("mu\"-\"Cl") // Hyphen Escaped
 ```
-<img alt="example-10" src="https://github.com/user-attachments/assets/c8f04a9f-8969-431f-84b8-390a7323b192" />
+<img alt="example-10" src="https://github.com/pacaunt/chemformula/blob/main/docs/assets/example10.png" />
 
 ## Reaction Arrows 
 ```typ
@@ -143,7 +145,7 @@ Contents inside `$..$` will be escaped by the parser and evaluated in math mode 
 
 #ch("A <=> B")
 ```
-<img  alt="example-11" src="https://github.com/user-attachments/assets/b75faaf3-ca93-467e-b6c6-6303c29da129" />
+<img  alt="example-11" src="https://github.com/pacaunt/chemformula/blob/main/docs/assets/example11.png" />
 
 ### Above/Below Arrow Text 
 ```typ
@@ -153,7 +155,7 @@ Contents inside `$..$` will be escaped by the parser and evaluated in math mode 
 
 #ch("CH3COOH <=>[+ OH-][+ H+] CH3COO-")
 ```
-<img alt="example-12" src="https://github.com/user-attachments/assets/34d651ce-e4c3-4933-833e-d3b36e33bcb8" />
+<img alt="example-12" src="https://github.com/pacaunt/chemformula/blob/main/docs/assets/example12.png" />
 
 ### Precipitation and Gas 
 This feature has *very* dedicate syntax: the `^` or `v` must precede -and- folows by white space.
@@ -162,7 +164,7 @@ This feature has *very* dedicate syntax: the `^` or `v` must precede -and- folow
 
 #ch("A v B v -> B ^ B ^")
 ```
-<img  alt="example-13" src="https://github.com/user-attachments/assets/f52e47bb-ed98-487b-a525-ca3f567de329" />
+<img  alt="example-13" src="https://github.com/pacaunt/chemformula/blob/main/docs/assets/example13.png" />
 
 ### Alignments
 ```typ
@@ -170,7 +172,7 @@ $ ch("A &-> B") \
   ch("B &-> C + D")
 $
 ```
-<img  alt="example-14" src="https://github.com/user-attachments/assets/9bf7f6a3-92bf-40b8-a9fc-20a178b10bcd" />
+<img  alt="example-14" src="https://github.com/pacaunt/chemformula/blob/main/docs/assets/example14.png" />
 
 ### Bonds 
 You can use a double dash `--`, to indicate single bond, double equal sign `==` for double bonds, and double tilde `~~` for triple bonds. 
@@ -181,7 +183,7 @@ You can use a double dash `--`, to indicate single bond, double equal sign `==` 
 
 #ch("HC~~CH")
 ```
-<img alt="example-15" src=https://github.com/pacaunt/chemformula/blob/main/docs/assets/example/example15.png>
+<img alt="example-15" src=https://github.com/pacaunt/chemformula/blob/main/docs/assets/example15.png>
 
 ### More Examples 
 Integration seamlessly with Typst's math mode.
@@ -193,7 +195,7 @@ $
   limits(ch("[Zn(OH)4]^2-"))_"Hydroxozikat"
 $
 ```
-<img alt="example-15" src="https://github.com/user-attachments/assets/4da96416-ec73-4100-af90-23610ac7b3b1" />
+<img alt="example-15" src="https://github.com/pacaunt/chemformula/blob/main/docs/assets/example16.png" />
 
 You can use user-defined functions in `ch`. However, you must add the definition of this function into the `scope` parameter of `ch`.
 
@@ -206,7 +208,7 @@ $ ch("Hg^2+ ->[I-] HgI2
             ->[I-] [Hg^II I4]^2-
 ") $
 ```
-<img alt="example-16" src="https://github.com/user-attachments/assets/a870ad91-612e-471f-8bf6-ea8211311e08" />
+<img alt="example-16" src="https://github.com/pacaunt/chemformula/blob/main/docs/assets/example17.png" />
 
 
 # Acknowledgement 

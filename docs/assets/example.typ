@@ -80,7 +80,7 @@ $display(ch("CH4 + 2(O2 + 7/2N2)"))$ // Hack with math mode
 
 = States of Aggregation 
 ```example 
-// #ch("H2(aq)")
+#ch("H2(g)")
 
 #ch("CO3^2-_((aq))")
 
