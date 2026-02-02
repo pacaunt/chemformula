@@ -205,8 +205,10 @@ in the argument of `ch` function. For example,
 #ch("O==C(CH3)3", bond-sep: 2pt,)
 ```
 <img alt="example-16" src=https://github.com/pacaunt/chemformula/blob/main/docs/assets/example16.png>
+
 ### More Examples 
 Integration seamlessly with Typst's math mode.
+
 ```typ
 $  
   ch("Zn^2+ <=>[+ 2 OH-][+ 2 H+]")
