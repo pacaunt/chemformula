@@ -221,7 +221,7 @@
   )
 
   if alt == auto {
-    alt = "Chemical formula: " + chem
+    alt = chem
   }
 
   if alt != none and type(result) == content and result.func() == math.equation {
