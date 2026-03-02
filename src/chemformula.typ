@@ -224,10 +224,10 @@
     alt = chem
   }
 
-  if alt != none and type(result) == content and result.func() == math.equation {
-    math.equation(block: result.block, alt: alt, result.body)
+  if alt != none {
+    math.equation(alt: alt, result)
   } else {
-    result
+    result 
   }
 }
 
