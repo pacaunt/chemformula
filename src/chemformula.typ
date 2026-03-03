@@ -191,6 +191,7 @@
   bond-styles: (:),
   bond-inset: 0.1em,
   bond-stroke: 1pt,
+  alt: auto,
 ) = {
   if type(chem) == content {
     if chem.func() == raw {
@@ -207,7 +208,7 @@
     stroke: bond-stroke,
     ..bond-styles,
   )
-  eval(
+  let result = eval(
     mode: "math",
     recursive-parse(chem, mode: mode),
     scope: (
@@ -218,6 +219,16 @@
     )
       + scope,
   )
+
+  if alt == auto {
+    alt = chem
+  }
+
+  if alt != none {
+    math.equation(alt: alt, result)
+  } else {
+    result 
+  }
 }
 
 #let ch = ch.with(scope: (ch: ch))
