@@ -257,3 +257,9 @@ $ {a/b}_2 lr("{" d/3 #sym.paren.r) $
 #ch("H^18;O--C==^18;O")
 
 #recursive-parse("#text(\"defasdfeac\")")
+
+#lorem(10)
+$ ch("A -> B") $
+#lorem(10)
+$ "A" --> "B" $
+#lorem(10)
