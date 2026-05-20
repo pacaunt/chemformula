@@ -155,7 +155,9 @@
       if args.len() == 0 {
         size = "2em"
       }
-      " stretch(" + arrow + ", size: #{" + size + "})^(" + above + ")_(" + below + ")"
+      " stretch(" + arrow + ", size: #{" + size + "})"
+      if above != none { "^(" + above + ")" }
+      if below != none { "_(" + below + ")" }
     } else if type == "Gaseous" {
       expr.replace("^", sym.arrow.t).replace(regex("\@|\;"), "")
     } else if type == "Precipitation" {
