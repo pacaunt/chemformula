@@ -121,7 +121,7 @@
         args.insert(pos, expr)
       }
       (
-        "\"\"#math.attach(math.limits($"
+        "#math.attach(math.limits($"
           + base
           + "$), "
           + {
@@ -227,7 +227,7 @@
   }
 
   if alt != none {
-    math.equation(alt: alt, result)
+    math.equation(alt: alt, result.body)
   } else {
     result 
   }
